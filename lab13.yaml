@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-config
+data:
+  PAGE_TITLE: "ITI Kubernetes Lab"
+  ENVIRONMENT: "dev"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-config-demo
+  labels:
+    app: web-config
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-config
+  template:
+    metadata:
+      labels:
+        app: web-config
+    spec:
+      containers:
+      - name: busybox-container
+        image: busybox:latest
+        command: ["/bin/sh", "-c", "while true; do echo $PAGE_TITLE - $ENVIRONMENT; sleep 10; done"]
+        envFrom:
+        - configMapRef:
+            name: web-config
