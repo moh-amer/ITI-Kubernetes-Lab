@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: print-envars-greeting
+  name: print-envars-greeting
+spec:
+  containers:
+  - env:
+    - name: GREETING
+      value: "Welcome to"
+    - name: COMPANY
+      value: "ITI"
+    - name: GROUP
+      value: "DevOps"
+    image: bash
+    name: print-envars-greeting
+    command: ["/bin/sh", "-c", "echo $GREETING $COMPANY $GROUP"]
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}

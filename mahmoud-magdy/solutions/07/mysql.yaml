@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mysql-svc
+  name: mysql-svc
+spec:
+  clusterIP: None
+  ports:
+  - name: 3306-3306
+    port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: mysql
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: mysql
+  name: mysql
+spec:
+  serviceName: "mysql-svc"
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:9.7.1
+        name: mysql
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "password"
+        - name: MYSQL_DATABASE
+          value: "mydatabase"
+        - name: MYSQL_USER
+          value: "myuser"
+        - name: MYSQL_PASSWORD
+          value: "mypassword"
+        resources: {}
+status: {}

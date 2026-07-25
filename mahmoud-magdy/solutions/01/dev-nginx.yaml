@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+spec: {}
+status: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: dev-nginx-pod
+  name: dev-nginx-pod
+  namespace: dev
+spec:
+  containers:
+  - image: nginx
+    name: dev-nginx-pod
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
