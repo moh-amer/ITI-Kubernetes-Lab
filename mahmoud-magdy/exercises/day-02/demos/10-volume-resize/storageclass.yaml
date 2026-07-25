@@ -1,0 +1,12 @@
+# Teaching SC: same provisioner as k3s, but allowVolumeExpansion: true.
+# Filesystem expansion support depends on the provisioner version —
+# follow the README: you will either see FileSystemResizePending / resized capacity,
+# or a clear error that expansion is not supported.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: iti-expandable
+provisioner: rancher.io/local-path
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Delete
+allowVolumeExpansion: true

@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  app.conf: |
+    color=blue
+    debug=true
+    course=ITI Volumes
+  welcome.txt: |
+    Hello from --from-file
+kind: ConfigMap
+metadata:
+  name: app-files
