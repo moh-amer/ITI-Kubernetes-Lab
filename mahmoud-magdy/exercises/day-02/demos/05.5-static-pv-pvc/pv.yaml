@@ -1,0 +1,19 @@
+# Cluster-scoped: admin pre-creates the volume (no StorageClass / no provisioner).
+# pool of volumes (as k8s resources)  -> claim pvc
+apiVersion: v1
+kind: PersistentVolume # cluster scoped resource
+metadata:
+  name: static-demo-pv
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce # ReadOnlyMany, ReadWriteMany, ReadWriteOncePod   # relation between volumes and nodes
+  persistentVolumeReclaimPolicy: Retain # Retain, Delete, Recycle (deprecated)
+  # Empty storageClassName = only bind PVCs that also request "" (no dynamic SC).
+  # storageClassName: ""
+  hostPath:
+    path: /tmp/static-demo-pv
+    type: DirectoryOrCreate

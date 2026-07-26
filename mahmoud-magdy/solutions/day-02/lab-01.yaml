@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: scratch-lab
+  name: scratch-lab
+spec:
+  containers:
+  - image: busybox:1.36
+    name: scratch-lab
+    command: ["sleep", "3600"]
+    volumeMounts:
+      - name: scratch
+        mountPath: /data
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+    - name: scratch
+      emptyDir: {}
+status: {}

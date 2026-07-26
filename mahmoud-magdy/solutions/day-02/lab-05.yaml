@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: work-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: pvc-lab
+  name: pvc-lab
+spec:
+  containers:
+  - image: busybox:1.36
+    name: pvc-lab
+    command: ["sleep", "3600"]
+    volumeMounts:
+    - name: work-volume
+      mountPath: /data
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+  - name: work-volume
+    persistentVolumeClaim:
+      claimName: work-pvc
+status: {}

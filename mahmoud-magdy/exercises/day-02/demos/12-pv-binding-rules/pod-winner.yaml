@@ -1,0 +1,17 @@
+# Optional: set claimName to whichever PVC won (claim-a or claim-b).
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bind-winner
+spec:
+  containers:
+    - name: app
+      image: busybox:1.36
+      command: ["sh", "-c", "sleep 3600"]
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: claim-a
