@@ -1,0 +1,32 @@
+apiVersion: v1
+data:
+  token: aXRpLXRva2VuLTQy
+  user: c3R1ZGVudA==
+kind: Secret
+metadata:
+  name: api-creds
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: secret-files
+  name: secret-files
+spec:
+  containers:
+  - image: busybox:1.36
+    name: secret-files
+    command: ["sleep", "3600"]
+    volumeMounts:
+    - name: api-volume
+      mountPath: /etc/api
+      readOnly: true
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+  - name: api-volume
+    secret:
+      secretName: api-creds
+      defaultMode: 0400
+status: {}
