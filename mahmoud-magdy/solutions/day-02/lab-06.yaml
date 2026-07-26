@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: pair-lab
+  name: pair-lab
+spec:
+  containers:
+  - image: busybox
+    name: writer
+    command: ["/bin/sh", "-c", "while true; do date >> /var/log/app/out.txt; sleep 2; done"]
+    volumeMounts:
+    - name: logs-volume
+      mountPath: /var/log/app
+    resources: {}
+  - image: busybox
+    name: reader
+    command: ["/bin/sh", "-c", "tail -F /var/log/app/out.txt"]
+    volumeMounts:
+    - name: logs-volume
+      mountPath: /var/log/app
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+  - name: logs-volume
+    emptyDir: {}
+status: {}
