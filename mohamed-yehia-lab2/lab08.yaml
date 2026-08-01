@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: lab-static-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  hostPath:
+    path: /tmp/lab-static-pv
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lab-static-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ""
+  volumeName: lab-static-pv
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lab-static
+spec:
+  containers:
+  - name: busybox
+    image: busybox:1.36
+    command: ["/bin/sh", "-c", "echo 'static-lab' > /data/proof.txt && sleep 3600"]
+    volumeMounts:
+    - name: static-vol
+      mountPath: /data
+  volumes:
+  - name: static-vol
+    persistentVolumeClaim:
+      claimName: lab-static-pvc
