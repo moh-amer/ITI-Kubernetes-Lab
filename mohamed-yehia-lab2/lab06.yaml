@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pair-lab
+spec:
+  volumes:
+  - name: shared-logs
+    emptyDir: {}
+  containers:
+  - name: writer
+    image: busybox:1.36
+    command: ["/bin/sh", "-c", "while true; do date >> /var/log/app/out.txt; sleep 2; done"]
+    volumeMounts:
+    - name: shared-logs
+      mountPath: /var/log/app
+  - name: reader
+    image: busybox:1.36
+    command: ["/bin/sh", "-c", "tail -F /var/log/app/out.txt"]
+    volumeMounts:
+    - name: shared-logs
+      mountPath: /var/log/app

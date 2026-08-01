@@ -1,0 +1,37 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: student-local
+provisioner: rancher.io/local-path
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Delete
+allowVolumeExpansion: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sc-lab-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: student-local
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sc-lab
+spec:
+  containers:
+  - name: busybox
+    image: busybox:1.36
+    command: ["/bin/sh", "-c", "echo 'storage-class-test' > /data/proof.txt && sleep 3600"]
+    volumeMounts:
+    - name: sc-vol
+      mountPath: /data
+  volumes:
+  - name: sc-vol
+    persistentVolumeClaim:
+      claimName: sc-lab-pvc
